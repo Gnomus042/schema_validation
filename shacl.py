@@ -5,15 +5,15 @@ from pyshacl import validate
 from rdflib import Graph
 
 
-def fill_blanks(pre_shex):
-    substs = json.loads(open('data/substs.json').read())
+def fill_blanks(initial_shex):
+    substitutions = json.loads(open('data/substs.json').read())
     changed = True
-    res = pre_shex
+    res = initial_shex
     while changed:
         match = re.search('<%(.*?)%>', res)
         if bool(match):
-            s = match.group(1)
-            res = res.replace(f"<%{s}%>", substs[s])
+            matched = match.group(1)
+            res = res.replace(f"<%{matched}%>", substitutions[matched])
         else:
             changed = False
     return res
