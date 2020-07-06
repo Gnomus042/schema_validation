@@ -1,4 +1,5 @@
 import json
+import re
 
 from pyshacl import validate
 from rdflib import Graph
@@ -6,10 +7,15 @@ from rdflib import Graph
 
 def fill_blanks(pre_shex):
     substs = json.loads(open('data/substs.json').read())
+    changed = True
     res = pre_shex
-    for s in substs:
-        res = res.replace(f"<%{s}%>", substs[s])
-        print(res)
+    while changed:
+        match = re.search('<%(.*?)%>', res)
+        if bool(match):
+            s = match.group(1)
+            res = res.replace(f"<%{s}%>", substs[s])
+        else:
+            changed = False
     return res
 
 
