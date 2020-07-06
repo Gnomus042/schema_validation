@@ -1,0 +1,110 @@
+PREFIX :   <http://example.org/>
+PREFIX schema: <http://schema.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX og: <http://ogp.me/ns#>
+BASE <http://schema.org/shex>
+
+<#BasicUrlSh> ((IRI OR LITERAL) AND CLOSED {}  AND /^(https?|gopher|ftps?):/)
+
+<#SchemaText> LITERAL OR xsd:string
+
+<#Duration> (@<#SchemaText> AND /^(-?)P(?=[0-9]|T[0-9])(?:([0-9]+)Y)?(?:([0-9]+)M)?(?:([0-9]+)([DW]))?(?:T(?:([0-9]+)H)?(?:([0-9]+)M)?(?:([0-9]+(?:\.[0-9]+)?)S)?)?$/)
+
+<#Date> (@<#SchemaText> AND /^[0-9]{4}-([0][0-9]|1[0-2])-([0-2][0-9]|3[01])$/)
+
+# Is it the only way to write enumeration or there is a better one?
+<#RestrictedDiet> { a [schema:RestrictedDiet schema:DiabeticDiet schema:GlutenFreeDiet schema:HalalDiet schema:HinduDiet schema:KosherDiet schema:LowCalorieDiet schema:LowFatDiet schema:LowLactoseDiet schema:LowSaltDiet schema:VeganDiet schema:VegetarianDiet] }
+
+# all expressions like {a [schema:ItemList]} should be replaced with expressions like @<#ItemList>
+
+<#CreativeWork> EXTRA a{
+    # Is it the only way to write enumeration or there is a better one?
+    # a [schema:CreativeWork] OR { rdfs:subClassOf @<#CreativeWork> } - this approach should accept all the subClass
+    # instances, but it doesn't
+    a [schema:CreativeWork schema:HowTo schema:Recipe];
+    schema:about { a [schema:Thing] } ?;
+    schema:abstract @<#SchemaText> ?;
+    schema:accessMode @<#SchemaText> ?;
+    schema:accessModeSufficient {a [schema:ItemList]} ?;
+    schema:accessibilityAPI @<#SchemaText> ?;
+    schema:accessibilityControl @<#SchemaText> ?;
+    schema:accessibilityFeature @<#SchemaText> ?;
+    schema:accessibilityHazard @<#SchemaText> ?;
+    schema:accessibilitySummary @<#SchemaText> ?;
+    schema:accountablePerson {a [schema:Person]} ?;
+    schema:acquireLicensePage @<#CreativeWork> OR @<#BasicUrlSh> ?;
+    schema:aggregateRating {a [schema:AggregateRating]} ?;
+    schema:alternativeHeadline @<#SchemaText> ?;
+    schema:assesses {a [schema:DefinedTerm]} OR @<#SchemaText> ?;
+    schema:associatedMedia { a [schema:MediaObject] } ?;
+    # ... etc.
+}
+
+<#HowTo> @<#CreativeWork> AND EXTRA a{
+    a [schema:HowTo schema:Recipe];
+    schema:estimatedCost (@<#SchemaText> OR {a [schema:MonetaryAmount]}) ?;
+    schema:performTime @<#Duration> ?;
+    schema:prepTime @<#Duration> ?;
+    schema:step (@<#CreativeWork> OR [schema:HowToSection schema:HowToStep] OR @<#SchemaText>) *;
+    schema:supply ([schema:HowToSupply] OR @<#SchemaText>) ?;
+    schema:tool ([schema:HowToTool] OR @<#SchemaText>) ?;
+    schema:totalTime @<#Duration> ?;
+    schema:yield ([schema:QuantitativeValue] OR @<#SchemaText>) *;
+}
+
+<#Recipe> @<#HowTo> AND EXTRA a {
+    a [schema:Recipe];
+    schema:cookTime @<#Duration> ?;
+    schema:cookingMethod @<#SchemaText> ?;
+    schema:nutrition {a [schema:NutritionInformation] } ?;
+    schema:recipeCategory @<#SchemaText> ?;
+    schema:recipeCuisine @<#SchemaText> ?;
+    schema:recipeIngredient (@<#SchemaText>) +;
+    schema:recipeInstructions (@<#SchemaText> OR { a [schema:CreativeWork] }) *;
+    schema:recipeYield (@<#SchemaText> OR {a [schema:QuantitativeValue]}) *;
+    schema:suitableForDiet @<#RestrictedDiet> *;
+}
+
+#################
+# Google Recipe
+
+<#GoogleRecipe> @<#Recipe> AND {
+    schema:image (@<#BasicUrlSh> OR {a [schema:ImageObject]}) +;
+    schema:name @<#SchemaText>;
+    schema:author {a [schema:Person schema:Organization]} ?;
+    schema:datePublished @<#Date> ?;
+    schema:description @<#SchemaText> ?;
+    schema:keywords @<#SchemaText> ?;
+    # ... etc.
+}
+
+##################
+# Pinterest Recipe
+
+<#PinterestRecipe> @<#Recipe> AND {
+    schema:name @<#SchemaText>;
+    schema:ingredients @<#SchemaText> +; # not sure if they use only text as Ingredient
+    schema:url @<#BasicUrlSh> ?;
+    schema:image @<#BasicUrlSh> {0, 6};
+}
+
+##################
+# Apple Recipe
+
+<#AppleRecipe> @<#Recipe> AND {
+    schema:image {a [og:image]} ?;
+    schema:title {a [og:title]} ?;
+}
+
+##################
+# Yandex Recipe
+
+<#YandexRecipe> @<#Recipe> AND {
+    schema:name @<#SchemaText>;
+    schema:image @<#BasicUrlSh> ?;
+    schema:author (@<#SchemaText> OR  {a [schema:Person schema:Organization]} ) ?;
+    # Fields not included in the schema.org standard but recommended by Yandex
+    schema:totalWeight @<#SchemaText> ?;
+    schema:recipeSubCategory @<#SchemaText> ?;
+    schema:resultPhoto @<#BasicUrlSh> ?;
+}

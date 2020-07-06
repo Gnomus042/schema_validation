@@ -1,0 +1,7 @@
+@prefix: <http://example.org/> .
+@prefix schema: <http://schema.org/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+
+:Recipe a sh:NodeShape;
+    sh:targetClass schema:Recipe;
+    sh:nodeKind sh:IRI.

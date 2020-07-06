@@ -1,0 +1,224 @@
+ds_shex = """
+
+PREFIX :   <http://example.org/>
+PREFIX schema: <http://schema.org/>
+PREFIX techdoc: <http://schema.org/>
+BASE <http://schema.org/shex>
+
+# Basic utilities
+# Note that we aren't attempting general domain/range checks here:
+
+<#BasicUrlSh> ((IRI OR LITERAL) AND CLOSED {}  AND /^(https?|gopher|ftps?):/)
+
+<#SchemaText> LITERAL OR xsd:string
+
+# assumes we have loaded the subClassOf type hierarchy:
+<#SubDataset> <#SubDatasetKnownClosure> OR { rdfs:subClassOf @<#SubDataset> }
+
+# doesn’t assume we have loaded the subClassOf type hierarchy:
+<#SubDatasetKnownClosure> [schema:Dataset schema:DataFeed]
+
+<#SubWork> [schema:CreativeWork] OR { rdfs:subClassOf @<#SubWork> }
+
+#####################
+
+# minimal Dataset shape: an identified type with a name and url
+<#BasicDatasetShape> EXTRA a
+  {
+    a [<http://schema.org/DataSet>];
+    schema:name @<#SchemaText> +;
+    schema:url @<#BasicUrlSh> +;
+
+    # Anything agreed here by all the more needy shapes below
+    # ...
+    schema:sameAs @<#BasicUrlSh> *;
+    schema:thumbnailUrl @<#BasicUrlSh> *;
+  }
+
+"""
+
+ds_shex_2 = """
+PREFIX :   <http://example.org/>
+PREFIX schema: <http://schema.org/>
+PREFIX techdoc: <http://schema.org/>
+BASE <http://schema.org/shex>
+
+<#BasicUrlSh> ((IRI OR LITERAL) AND CLOSED {}  AND /^(https?|gopher|ftps?):/)
+
+<#SchemaText> LITERAL OR xsd:string
+
+# assumes we have loaded the subClassOf type hierarchy:
+<#SubDataset> <#SubDatasetKnownClosure> OR { rdfs:subClassOf @<#SubDataset> }
+
+# doesn’t assume we have loaded the subClassOf type hierarchy:
+<#SubDatasetKnownClosure> [schema:Dataset schema:DataFeed]
+
+<#SubWork> [schema:CreativeWork] OR { rdfs:subClassOf @<#SubWork> }
+
+#####################
+
+# minimal Dataset shape: an identified type with a name and url
+<#BasicDatasetShape> EXTRA a
+  { &<#BasicDatasetShape_tes> ;
+    a [<http://schema.org/DataSet>];
+    schema:name @<#SchemaText> +;
+    schema:url @<#BasicUrlSh> +;
+
+    # Anything agreed here by all the more needy shapes below
+    # ...
+    schema:sameAs @<#BasicUrlSh> *;
+    schema:thumbnailUrl @<#BasicUrlSh> *;
+  }
+
+<#IdealGoogleDatasetShape> ( { (
+    $<#BasicDatasetShape_tes>
+
+    schema:license (@<#BasicUrlSh> OR { a [schema:CreativeWork] }) + ;
+
+    # note the techdoc: comment properties below attach arbitrary info to each constraint:
+
+    schema:sameAs @<#BasicUrlSh> + ;
+
+
+    schema:creator { a [schema:Person schema:Organization] } ;
+    schema:provider { a [schema:Person schema:Organization] } ;
+    schema:publisher { a [schema:Person schema:Organization] } ;
+
+    schema:includedInDataCatalog { a [schema:DataCatalog] ; ( schema:name @<#SchemaText> | schema:url @<#BasicUrlSh>) } ;
+
+   schema:citation {
+     a [schema:CreativeWork] ;
+     ( schema:name @<#SchemaText> | schema:url @<#BasicUrlSh> )
+   } OR @<#SchemaText> ;
+
+    schema:distribution {
+      a [schema:DataDownload] ;
+      schema:encodingFormat @<#SchemaText> ;
+      schema:contentUrl @<#BasicUrlSh>
+    } ;
+
+
+   schema:spatialCoverage { a [schema:Place] } ;
+
+) } )
+"""
+
+
+ds_shex = """
+// dataset-richvalidation.sh
+
+PREFIX :   <http://example.org/>
+PREFIX schema: <http://schema.org/>
+PREFIX techdoc: <http://schema.org/>
+
+# Basic utilities
+# Note that we aren't attempting general domain/range checks here:
+
+<#BasicUrlSh> ((IRI OR LITERAL) AND CLOSED {}  AND /^(https?|gopher|ftps?):/)
+
+<#SchemaText> LITERAL OR xsd:string // inclusive, scruffy
+
+# assumes we have loaded the subClassOf type hierarchy:
+<#SubDataset> <#SubDatasetKnownClosure> OR { rdfs:subClassOf @<#SubDataset> }
+
+# doesn’t assume we have loaded the subClassOf type hierarchy:
+<#SubDatasetKnownClosure> [schema:Dataset schema:DataFeed]
+
+<#SubWork> [schema:CreativeWork] OR { rdfs:subClassOf @<#SubWork> }
+
+#####################
+
+# minimal Dataset shape: an identified type with a name and url
+<#BasicDatasetShape> EXTRA a
+  {
+    a <#SubDataset>;
+    schema:name @<#SchemaText> +;
+    schema:url @<#BasicUrlSh> +;
+
+    # Anything agreed here by all the more needy shapes below
+    # ...
+    schema:sameAs @<#BasicUrlSh> *;
+    schema:thumbnailUrl @<#BasicUrlSh> *;
+  }
+
+##################################################################
+#
+# Super Needy Platform/service/product-specific requirements here:
+
+/*
+Regarding <#IdealGoogleDatasetShape> EXTENDS @<#BasicDatasetShape>
+If using PyShex in CoLab, we may need to do: s/EXTENDS @X/@X AND/g
+… since Python ShEx does not have EXTENDS yet but if we're not closing shapes
+or using properties defined in multiple parents, we can get the same effect with AND
+*/
+
+# FOR JS: <#IdealGoogleDatasetShape> EXTENDS @<#BasicDatasetShape> {
+
+# FOR PyShEx:
+ @<#BasicDatasetShape> AND <#IdealGoogleDatasetShape> {
+    schema:license (@<#BasicUrlSh> OR { a [schema:CreativeWork] }) +
+
+    # note the techdoc: comment properties below attach arbitrary info to each constraint:
+
+    schema:sameAs @<#BasicUrlSh> +
+      // techdoc:markupIncentiveDoc <https://developers.google.com/search/docs/data-types/dataset#sitemap> ;
+      // util:markupHint "Google documentation states 'Use the sameAs property to link to the canonical page if you add structured data to multiple copies of the dataset, such as listings in search results pages.' ";
+
+} # we can attach documentation comments to the entire shape too:
+  // techdoc:description "Google Dataset Search"
+  // techdoc:url <https://developers.google.com/search/docs/data-types/dataset>
+
+# For any value of "creator", "provider" or "publisher", …   value should be typed as Person or Organization
+
+    schema:creator { a [schema:Person schema:Organization] } ;
+    schema:provider { a [schema:Person schema:Organization] } ;
+    schema:publisher { a [schema:Person schema:Organization] } ;
+
+# For any value of "includedInDataCatalog",  value should be typed as a DataCatalog
+#   Which should have either/both of a name or url
+
+    schema:includedInDataCatalog { a [schema:DataCatalog] ; ( schema:name @<#SchemaText> | schema:url @<#BasicUrlSh>) } ;
+
+# For any value of "citation" value should be typed as a CreativeWork
+# (which should have either/both of a name or url) or Text.
+
+   schema:citation {
+     a [schema:CreativeWork] ;
+     ( schema:name @<#SchemaText> | schema:url @<#BasicUrlSh> )
+   } OR @<#SchemaText> ;
+
+# For any value of "distribution" value should be typed as a DataDownload
+#     On which encodingFormat and contentUrl values are recommended.
+#        TODO:  Any datePublished value should be a valid datetime-with-time.
+
+    schema:distribution {
+      a [schema:DataDownload] ;
+      schema:encodingFormat @<#SchemaText> ;
+      schema:contentUrl @<#BasicUrlSh>
+    } ;
+
+# For any value of "spatialCoverage", any value of its spatialCoverage should be typed as a Place.
+
+   schema:spatialCoverage { a [schema:Place] } ;
+
+# Any value of its "geo" property should be typed as GeoShape or GeoCoordinates.}
+# TODO: nest this inside spatialCoverage:
+#    schema:geo { a [schema:GeoShape schema:GeoCoordinates] } ;
+
+}
+
+##################################################################
+#
+# Other search engines / platforms / users can be described like this
+<#IdealFinderSpyderDatasetShape> EXTENDS @<#BasicDatasetShape> {
+
+ # nothing here yet, but other search platforms could document their info needs same way.
+
+}
+
+#
+#
+#
+##################################################################
+
+"""
