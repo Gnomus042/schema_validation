@@ -1,7 +1,118 @@
 @prefix: <http://example.org/> .
 @prefix schema: <http://schema.org/> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema> .
+
+:HowTo a sh:NodeShape;
+    sh:targetClass schema:HowTo;
+    sh:property [
+        sh:path schema:estimatedCost;
+        sh:or (
+            [<%SchemaText%>]
+            [sh:class schema:MonetaryAmount]
+        );
+        sh:maxCount 1;
+    ];
+    sh:property [
+        sh:path schema:performTime;
+        <%Duration%>;
+        sh:maxCount 1;
+    ];
+    sh:property [
+        sh:path schema:prepTime;
+        <%Duration%>;
+        sh:maxCount 1;
+    ];
+    sh:property [
+        sh:path schema:prepTime;
+        <%Duration%>;
+        sh:maxCount 1;
+    ];
+    sh:property [
+        sh:path schema:step;
+        sh:or (
+            [sh:class schema:CreativeWork]
+            [sh:class schema:HowToSection]
+            [sh:class schema:HowToStep]
+            [<%SchemaText%>]
+        );
+    ];
+    sh:property [
+        sh:path schema:supply;
+        sh:or (
+            [sh:class schema:HowToSupply]
+            [<%SchemaText%>]
+        );
+        sh:maxCount 1;
+    ];
+    sh:property [
+        sh:path schema:tool;
+        sh:or (
+            [sh:class schema:HowToTool]
+            [<%SchemaText%>]
+        );
+        sh:maxCount 1;
+    ];
+    sh:property [
+        sh:path schema:totalTime;
+        <%Duration%>;
+        sh:maxCount 1;
+    ];
+    sh:property [
+        sh:path schema:yield;
+        sh:or (
+            [sh:class schema:QuantitativeValue]
+            [<%SchemaText%>]
+        );
+    ].
+
 
 :Recipe a sh:NodeShape;
     sh:targetClass schema:Recipe;
-    sh:nodeKind sh:IRI.
+    sh:and (
+        :HowTo
+        sh:property [
+            sh:path schema:cookTime;
+            <%Duration%>;
+            sh:maxCount 1;
+        ]
+        sh:property [
+            sh:path schema:cookingMethod;
+            <%SchemaText%>;
+            sh:maxCount 1;
+        ]
+        sh:property [
+            sh:path schema:nutrition;
+            sh:class schema:NutritionInformation;
+            sh:maxCount 1;
+        ]
+        sh:property [
+            sh:path schema:recipeCategory;
+            <%SchemaText%>;
+            sh:maxCount 1;
+        ]
+        sh:property [
+            sh:path schema:recipeCuisine;
+            <%SchemaText%>;
+            sh:maxCount 1;
+        ]
+        sh:property [
+            sh:path schema:recipeIngredient;
+            <%SchemaText%>;
+            sh:minCount 1;
+        ]
+        sh:property [
+            sh:path schema:recipeInstructions;
+            sh:or (
+                [<%SchemaText%>]
+                [sh:class schema:CreativeWork]
+            );
+        ]
+        sh:property [
+            sh:path schema:recipeYield;
+            sh:or (
+                [<%SchemaText%>]
+                [sh:class schema:QuantitativeValue]
+            );
+        ]
+    ).
