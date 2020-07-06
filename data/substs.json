@@ -1,0 +1,3 @@
+{
+  "SchemaText": "sh:or (\n            [sh:nodeKind sh:Literal]\n            [sh:datatype xsd:string]\n        )"
+}

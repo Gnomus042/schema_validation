@@ -1,7 +1,58 @@
 @prefix: <http://example.org/> .
 @prefix schema: <http://schema.org/> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema> .
 
 :Recipe a sh:NodeShape;
     sh:targetClass schema:Recipe;
-    sh:nodeKind sh:IRI.
+    sh:property [
+        sh:path schema:cookTime;
+        sh:or (
+        [
+            <%SchemaText%>;
+            sh:pattern "^(-?)P(?=[0-9]|T[0-9])(?:([0-9]+)Y)?(?:([0-9]+)M)?(?:([0-9]+)([DW]))?(?:T(?:([0-9]+)H)?(?:([0-9]+)M)?(?:([0-9]+(?:\\.[0-9]+)?)S)?)?$";
+            sh:flags "i";
+        ]
+        [sh:class schema:Duration]
+        );
+        sh:maxCount 1;
+    ];
+    sh:property [
+        sh:path schema:cookingMethod;
+        <%SchemaText%>;
+        sh:maxCount 1;
+    ];
+    sh:property [
+        sh:path schema:nutrition;
+        sh:class schema:NutritionInformation;
+        sh:maxCount 1;
+    ];
+    sh:property [
+        sh:path schema:recipeCategory;
+        <%SchemaText%>;
+        sh:maxCount 1;
+    ];
+    sh:property [
+        sh:path schema:recipeCuisine;
+        <%SchemaText%>;
+        sh:maxCount 1;
+    ];
+    sh:property [
+        sh:path schema:recipeIngredient;
+        <%SchemaText%>;
+        sh:minCount 1;
+    ];
+    sh:property [
+        sh:path schema:recipeInstructions;
+        schema:or (
+            [<%SchemaText%>]
+            [sh:class schema:CreativeWork]
+        );
+    ];
+    sh:property [
+        sh:path schema:recipeYield;
+        schema:or (
+            [<%SchemaText%>]
+            [sh:class schema:QuantitativeValue]
+        );
+    ].
