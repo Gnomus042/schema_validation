@@ -377,3 +377,51 @@
             );
         ]
     ).
+
+
+#################
+# Google Recipe
+
+:GoogleRecipe a sh:NodeShape;
+    sh:and (
+        :Recipe
+        [
+            sh:path schema:image;
+            sh:or (
+                [<%BasicURL%>]
+                [sh:class schema:ImageObject]
+            );
+            sh:minCount 1;
+            sh:message "Image is required";
+        ]
+        [
+            sh:path schema:name;
+            <%SchemaText%>;
+            sh:minCount 1;
+            sh:maxCount 1;
+            sh:message "Name is required";
+        ]
+        [
+            sh:path schema:author;
+            sh:maxCount 1;
+            sh:minCount 1;
+            sh:severity sh:Warning;
+            sh:message "author is missing. Adding the author is not required, but preferable.";
+        ]
+        [
+            sh:path schema:datePublished;
+            sh:datatype xsd:date;
+            sh:minCount 1;
+            sh:maxCount 1;
+            sh:severity sh:Warning;
+            sh:message "datePublished is missing. Adding this property is not required, but preferable.";
+        ]
+        [
+            sh:path schema:keywords;
+            <%SchemaText%>;
+            sh:minCount 1;
+            sh:maxCount 1;
+            sh:severity sh:Warning;
+            sh:message "keywords are missing. Adding this property is not required, but preferable.";
+        ]
+    ).
