@@ -4,70 +4,328 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema> .
 
 :CreativeWork a sh:NodeShape;
-    sh:targetClass
+    sh:targetClass schema:HowTo;
+    sh:property [
+        sh:path schema:ftypicalAgeRange;
+    ];
+    sh:property [
+        sh:path schema:freleasedEvent;
+    ];
+    sh:property [
+        sh:path schema:fschemaVersion;
+    ];
+    sh:property [
+        sh:path schema:fcontentLocation;
+    ];
+    sh:property [
+        sh:path schema:flocationCreated;
+    ];
+    sh:property [
+        sh:path schema:faccessibilityFeature;
+    ];
+    sh:property [
+        sh:path schema:faggregateRating;
+    ];
+    sh:property [
+        sh:path schema:ftemporalCoverage;
+    ];
+    sh:property [
+        sh:path schema:faccessModeSufficient;
+    ];
+    sh:property [
+        sh:path schema:faccountablePerson;
+    ];
+    sh:property [
+        sh:path schema:fkeywords;
+    ];
+    sh:property [
+        sh:path schema:fspatialCoverage;
+    ];
+    sh:property [
+        sh:path schema:fexampleOfWork;
+    ];
+    sh:property [
+        sh:path schema:feditor;
+    ];
+    sh:property [
+        sh:path schema:foffers;
+    ];
+    sh:property [
+        sh:path schema:fdiscussionUrl;
+    ];
+    sh:property [
+        sh:path schema:faward;
+    ];
+    sh:property [
+        sh:path schema:fencodings;
+    ];
+    sh:property [
+        sh:path schema:fcopyrightHolder;
+    ];
+    sh:property [
+        sh:path schema:faccessibilityHazard;
+    ];
+    sh:property [
+        sh:path schema:fcopyrightYear;
+    ];
+    sh:property [
+        sh:path schema:fawards;
+    ];
+    sh:property [
+        sh:path schema:fhasPart;
+    ];
+    sh:property [
+        sh:path schema:fcommentCount;
+    ];
+    sh:property [
+        sh:path schema:fspatial;
+    ];
+    sh:property [
+        sh:path schema:frecordedAt;
+    ];
+    sh:property [
+        sh:path schema:ffileFormat;
+    ];
+    sh:property [
+        sh:path schema:ftemporal;
+    ];
+    sh:property [
+        sh:path schema:fabout;
+    ];
+    sh:property [
+        sh:path schema:faccessibilitySummary;
+    ];
+    sh:property [
+        sh:path schema:feducationalAlignment;
+    ];
+    sh:property [
+        sh:path schema:fassociatedMedia;
+    ];
+    sh:property [
+        sh:path schema:ffunder;
+    ];
+    sh:property [
+        sh:path schema:fposition;
+    ];
+    sh:property [
+        sh:path schema:faudio;
+    ];
+    sh:property [
+        sh:path schema:fworkExample;
+    ];
+    sh:property [
+        sh:path schema:fencoding;
+    ];
+    sh:property [
+        sh:path schema:finteractivityType;
+    ];
+    sh:property [
+        sh:path schema:fprovider;
+    ];
+    sh:property [
+        sh:path schema:fcharacter;
+    ];
+    sh:property [
+        sh:path schema:fsourceOrganization;
+    ];
+    sh:property [
+        sh:path schema:faudience;
+    ];
+    sh:property [
+        sh:path schema:fisPartOf;
+    ];
+    sh:property [
+        sh:path schema:fvideo;
+    ];
+    sh:property [
+        sh:path schema:fpublisher;
+    ];
+    sh:property [
+        sh:path schema:ftext;
+    ];
+    sh:property [
+        sh:path schema:fpublication;
+    ];
+    sh:property [
+        sh:path schema:fexpires;
+    ];
+    sh:property [
+        sh:path schema:fcontributor;
+    ];
+    sh:property [
+        sh:path schema:fencodingFormat;
+    ];
+    sh:property [
+        sh:path schema:freview;
+    ];
+    sh:property [
+        sh:path schema:faccessibilityControl;
+    ];
+    sh:property [
+        sh:path schema:flicense;
+    ];
+    sh:property [
+        sh:path schema:fsponsor;
+    ];
+    sh:property [
+        sh:path schema:fisBasedOn;
+    ];
+    sh:property [
+        sh:path schema:fcreator;
+    ];
+    sh:property [
+        sh:path schema:fpublishingPrinciples;
+    ];
+    sh:property [
+        sh:path schema:fproducer;
+    ];
+    sh:property [
+        sh:path schema:fmentions;
+    ];
+    sh:property [
+        sh:path schema:fdateCreated;
+    ];
+    sh:property [
+        sh:path schema:fdatePublished;
+    ];
+    sh:property [
+        sh:path schema:fisAccessibleForFree;
+    ];
+    sh:property [
+        sh:path schema:falternativeHeadline;
+    ];
+    sh:property [
+        sh:path schema:fheadline;
+    ];
+    sh:property [
+        sh:path schema:fcitation;
+    ];
+    sh:property [
+        sh:path schema:faccessibilityAPI;
+    ];
+    sh:property [
+        sh:path schema:freviews;
+    ];
+    sh:property [
+        sh:path schema:finteractionStatistic;
+    ];
+    sh:property [
+        sh:path schema:fcontentRating;
+    ];
+    sh:property [
+        sh:path schema:flearningResourceType;
+    ];
+    sh:property [
+        sh:path schema:faccessMode;
+    ];
+    sh:property [
+        sh:path schema:feducationalUse;
+    ];
+    sh:property [
+        sh:path schema:fmaterial;
+    ];
+    sh:property [
+        sh:path schema:fisFamilyFriendly;
+    ];
+    sh:property [
+        sh:path schema:fmainEntity;
+    ];
+    sh:property [
+        sh:path schema:fversion;
+    ];
+    sh:property [
+        sh:path schema:fdateModified;
+    ];
+    sh:property [
+        sh:path schema:fgenre;
+    ];
+    sh:property [
+        sh:path schema:fauthor;
+    ];
+    sh:property [
+        sh:path schema:fisBasedOnUrl;
+    ];
+    sh:property [
+        sh:path schema:ftranslator;
+    ];
+    sh:property [
+        sh:path schema:ftimeRequired;
+    ];
+    sh:property [
+        sh:path schema:fthumbnailUrl;
+    ];
+    sh:property [
+        sh:path schema:fcomment;
+    ];
+    sh:property [
+        sh:path schema:finLanguage;
+    ].
 
 :HowTo a sh:NodeShape;
     sh:targetClass schema:HowTo;
-    sh:property [
-        sh:path schema:estimatedCost;
-        sh:or (
-            [<%SchemaText%>]
-            [sh:class schema:MonetaryAmount]
-        );
-        sh:maxCount 1;
-    ];
-    sh:property [
-        sh:path schema:performTime;
-        <%Duration%>;
-        sh:maxCount 1;
-    ];
-    sh:property [
-        sh:path schema:prepTime;
-        <%Duration%>;
-        sh:maxCount 1;
-    ];
-    sh:property [
-        sh:path schema:prepTime;
-        <%Duration%>;
-        sh:maxCount 1;
-    ];
-    sh:property [
-        sh:path schema:step;
-        sh:or (
-            [sh:class schema:CreativeWork]
-            [sh:class schema:HowToSection]
-            [sh:class schema:HowToStep]
-            [<%SchemaText%>]
-        );
-    ];
-    sh:property [
-        sh:path schema:supply;
-        sh:or (
-            [sh:class schema:HowToSupply]
-            [<%SchemaText%>]
-        );
-        sh:maxCount 1;
-    ];
-    sh:property [
-        sh:path schema:tool;
-        sh:or (
-            [sh:class schema:HowToTool]
-            [<%SchemaText%>]
-        );
-        sh:maxCount 1;
-    ];
-    sh:property [
-        sh:path schema:totalTime;
-        <%Duration%>;
-        sh:maxCount 1;
-    ];
-    sh:property [
-        sh:path schema:yield;
-        sh:or (
-            [sh:class schema:QuantitativeValue]
-            [<%SchemaText%>]
-        );
-    ].
+    sh:and (
+        :CreativeWork
+        sh:property [
+            sh:path schema:estimatedCost;
+            sh:or (
+                [<%SchemaText%>]
+                [sh:class schema:MonetaryAmount]
+            );
+            sh:maxCount 1;
+        ]
+        sh:property [
+            sh:path schema:performTime;
+            <%Duration%>;
+            sh:maxCount 1;
+        ]
+        sh:property [
+            sh:path schema:prepTime;
+            <%Duration%>;
+            sh:maxCount 1;
+        ]
+        sh:property [
+            sh:path schema:prepTime;
+            <%Duration%>;
+            sh:maxCount 1;
+        ]
+        sh:property [
+            sh:path schema:step;
+            sh:or (
+                [sh:class :CreativeWork]
+                [sh:class schema:HowToSection]
+                [sh:class schema:HowToStep]
+                [<%SchemaText%>]
+            );
+        ]
+        sh:property [
+            sh:path schema:supply;
+            sh:or (
+                [sh:class schema:HowToSupply]
+                [<%SchemaText%>]
+            );
+            sh:maxCount 1;
+        ]
+        sh:property [
+            sh:path schema:tool;
+            sh:or (
+                [sh:class schema:HowToTool]
+                [<%SchemaText%>]
+            );
+            sh:maxCount 1;
+        ]
+        sh:property [
+            sh:path schema:totalTime;
+            <%Duration%>;
+            sh:maxCount 1;
+        ]
+        sh:property [
+            sh:path schema:yield;
+            sh:or (
+                [sh:class schema:QuantitativeValue]
+                [<%SchemaText%>]
+            );
+        ]
+    ).
 
 
 :Recipe a sh:NodeShape;
