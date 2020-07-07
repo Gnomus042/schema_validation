@@ -3,6 +3,9 @@
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema> .
 
+:CreativeWork a sh:NodeShape;
+    sh:targetClass
+
 :HowTo a sh:NodeShape;
     sh:targetClass schema:HowTo;
     sh:property [
