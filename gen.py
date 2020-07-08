@@ -59,16 +59,18 @@ class Property:
         return res
 
     def shex_serialize(self):
-        serialized_range = []
-        for node in self.rangeIncludes:
-            serialized_range.append(f"<#{node.name}>")
+        serialized_range = [f"<#{node.name}>" for node in self.rangeIncludes]
         if len(serialized_range) == 1:
             return f"schema:{self.label} {serialized_range[0]} ;"
-        else:
-            return f"schema:{self.label} ({' OR '.join(serialized_range)}) ;"
+        return f"schema:{self.label} ({' OR '.join(serialized_range)}) ;"
 
-    def shacl_serialize(self):
-        pass
+    def shacl_serialize(self, base_ident):
+        indent = lambda x: '\t'*(base_ident+x)
+        serialized_range = [f"sh:class :{node.name}" for node in self.rangeIncludes]
+        if len(serialized_range) == 1:
+            return f"sh:property [\n{indent(1)}sh:path schema:{self.label};\n{indent(1)}{serialized_range[0]};\n{indent(0)}]"
+        serialized_range = '\n'.join([f"\t\t\t\t[{x}]" for x in serialized_range])
+        return f"sh:property [\n{indent(1)}sh:path schema:{self.label};\n{indent(1)}sh:or (\n{serialized_range}\n{indent(1)});\n{indent(0)}]"
 
 
 class Node:
@@ -131,7 +133,7 @@ class Generator:
     def get_schema_json(self, path):
         return json.loads(open(path).read())
 
-    def print_as_shex(self, node_id):
+    def to_shex(self, node_id):
         node = self.graph[node_id]
         node_name = f"<#{node.name}>"
         subslass_of = f"@<#{node.subclass_of[0].name}> AND" if len(node.subclass_of) > 0 else ""
@@ -139,7 +141,18 @@ class Generator:
         properties = '\n\t'.join([x.shex_serialize() for x in node.properties])
         return f"{node_name} {subslass_of} EXTRA a {{ \n\ta [{children}];\n\t{properties}\n}}"
 
+    def to_shacl(self, node_id):
+        node = self.graph[node_id]
+        indent = lambda x: "\t"*x
+        props = ""
+        if len(node.subclass_of) > 0:
+            temp = f'\n{indent(2)}'.join([x.shacl_serialize(2) for x in node.properties])
+            props = f"sh:and (\n{indent(2)}:{node.subclass_of[0].name}\n{indent(2)}{temp})"
+        else:
+            props = f'\n{indent(2)}'.join([x.shacl_serialize(2) + ";" for x in node.properties])
+        return f":{node.name} sh:NodeShape;\n\tsh:targetClass schema:{node.name};\n{indent(1)}{props}."
+
 
 if __name__ == '__main__':
     g = Generator()
-    print(g.print_as_shex('http://schema.org/HowTo'))
+    print(g.to_shacl('http://schema.org/Thing'))
