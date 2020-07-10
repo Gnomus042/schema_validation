@@ -111,10 +111,13 @@ class Node:
 
 
 class ShapesGenerator:
-    def __init__(self, schema: dict = None, ):
+    def __init__(self, schema: dict):
         self.graph = dict()
         self.properties = dict()
-        self.schema = (schema if schema else self.get_schema_json('./data/schema.jsonld'))['@graph']
+        try:
+            self.schema = schema['@graph']
+        except Exception as ex:
+            print("Can't use this schema file. \nDescription:", str(ex))
         self.build_graph()
 
     def build_graph(self):
