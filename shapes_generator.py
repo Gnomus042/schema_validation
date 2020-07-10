@@ -151,8 +151,8 @@ class ShapesGenerator:
         node_name = f"<#{node.label}>"
         subclass_of = f"@<#{node.subclass_of[0].label}> AND" if len(node.subclass_of) > 0 else ""
         children = ' '.join(['schema:' + x.label for x in node.parent_to + [node]])
-        properties = '\n\t'.join([x.to_shex() for x in node.properties])
-        return f"{node_name} {subclass_of} EXTRA a {{ \n\ta [{children}];\n\t{properties}\n}}"
+        properties = ''.join(['\n\t'+x.to_shex() for x in node.properties])
+        return f"{node_name} {subclass_of} EXTRA a {{ \n\ta [{children}];{properties}\n}}"
 
     def to_shacl(self, node_id):
         node = self.graph[node_id]
