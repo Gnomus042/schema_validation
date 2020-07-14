@@ -57,7 +57,7 @@ class Property:
         return res_nodes
 
     def to_shex(self):
-        values_range = [f"<#{node.label}>" for node in self.rangeIncludes]
+        values_range = [f"@<#{node.label}>" for node in self.rangeIncludes]
         values_range_str = values_range[0] if len(values_range) == 1 else f"({' OR '.join(values_range)})"
         return f"schema:{self.label} {values_range_str} ;"
 
@@ -151,7 +151,7 @@ class ShapesGenerator:
         node_name = f"<#{node.label}>"
         subclass_of = f"@<#{node.subclass_of[0].label}> AND" if len(node.subclass_of) > 0 else ""
         children = ' '.join(['schema:' + x.label for x in node.parent_to + [node]])
-        properties = ''.join(['\n\t'+x.to_shex() for x in node.properties])
+        properties = ''.join(['\n\t'+x.to_shex() for x in sorted(node.properties, key=lambda x: x.label)])
         return f"{node_name} {subclass_of} EXTRA a {{ \n\ta [{children}];{properties}\n}}"
 
     def to_shacl(self, node_id):
@@ -161,8 +161,8 @@ class ShapesGenerator:
             return "\t" * x
 
         if len(node.subclass_of) > 0:
-            temp = f'\n'.join([x.to_shacl(2) for x in node.properties])
+            temp = f'\n'.join([x.to_shacl(2) for x in sorted(node.properties, key=lambda x: x.label)])
             props = f"{indent(1)}sh:and (\n{indent(2)}:{node.subclass_of[0].label}\n{temp})"
         else:
-            props = f';\n'.join([x.to_shacl(1) for x in node.properties])
+            props = f';\n'.join([x.to_shacl(1) for x in sorted(node.properties, key=lambda x: x.label)])
         return f":{node.label} sh:NodeShape;\n\tsh:targetClass schema:{node.label};\n{props}."
