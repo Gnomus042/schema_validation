@@ -161,6 +161,6 @@ class ShapesGenerator:
             return "\t" * x
         extension = ""
         if len(node.subclass_of) > 0:
-            extension = f"\n\tsh:node :{node.subclass_of[0].label}"
+            extension = f"\n\tsh:node :{node.subclass_of[0].label};"
         props = f';\n'.join([x.to_shacl(1) for x in sorted(node.properties, key=lambda x: x.label)])
         return f":{node.label} a sh:NodeShape;\n\tsh:targetClass schema:{node.label};{extension}\n{props}."
