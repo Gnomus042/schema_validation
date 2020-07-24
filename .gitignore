@@ -2,3 +2,7 @@
 __pycache__/
 venv/
 
+shacl/
+shex/
+data/
+.DS_store
