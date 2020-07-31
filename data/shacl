@@ -1,0 +1,310 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <http://schema.org/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+[] a sh:NodeShape ;
+   schema:identifier "ValidSoDataset" ;
+   sh:and (
+        [
+           sh:property [
+               sh:minCount 1 ;
+               sh:path schema:name
+           ]
+        ]
+        [
+           sh:property [
+               sh:minCount 1 ;
+               sh:path schema:description
+           ],
+           [
+               sh:maxLength 5000 ;
+               sh:minLength 50 ;
+               sh:path schema:description
+           ]
+        ]
+        [
+           sh:property [
+               sh:maxCount 1 ;
+               sh:path schema:license ;
+               sh:severity sh:Warning
+           ],
+           [
+               sh:and (
+               [
+                   sh:or (
+                   [
+                       sh:node [
+                           a sh:NodeShape ;
+                           sh:property [
+                               sh:min_count 1 ;
+                               sh:path rdf:type ;
+                               sh:pattern "http://schema.org/CreativeWork"
+                           ]
+                       ]
+                   ]
+                   [
+                       sh:datatype xsd:anyURI
+                   ])
+               ]
+               [
+                   sh:or
+                   [
+                       sh:node [
+                           a sh:NodeShape ;
+                           sh:and (
+                               [
+                                   sh:or (
+                                       [
+                                           sh:property [
+                                               sh:minCount 1 ;
+                                               sh:path schema:name
+                                           ]
+                                       ]
+                                       [
+                                           sh:property [
+                                               sh:minCount 1 ;
+                                               sh:path schema:url
+                                           ]
+                                       ]
+                                   )
+                               ]
+                               [
+                                   sh:property [
+                                       sh:message "VALID_URL" ;
+                                       sh:path schema:url
+                                   ]
+                               ]
+                           )
+                       ];
+                       sh:not [
+                           sh:node [
+                               a sh:NodeShape ;
+                               sh:property [
+                                   sh:min_count 1 ;
+                                   sh:path rdf:type ;
+                                   sh:pattern "http://schema.org/CreativeWork"
+                               ]
+                           ]
+                       ]
+                   ]
+               ]) ;
+               sh:path schema:license
+           ]
+        ]
+        [
+           sh:property [
+               sh:message "VALID_URL" ;
+               sh:path schema:url
+           ]
+        ]
+        [
+           sh:property [
+               sh:message "VALID_URL" ;
+               sh:path schema:sameAs
+           ]
+        ]
+        [
+           sh:property [
+               sh:message "VALID_URL" ;
+               sh:path schema:thumbnailUrl
+           ]
+        ]
+        [
+           sh:property [
+               sh:and (
+               [
+                   sh:or (
+                   [
+                       sh:node [
+                           a sh:NodeShape ;
+                           sh:property [
+                               sh:min_count 1 ;
+                               sh:path rdf:type ;
+                               sh:pattern "http://schema.org/Person"
+                           ]
+                       ]
+                   ]
+                   [
+                       sh:node [
+                           a sh:NodeShape ;
+                           sh:property [
+                               sh:min_count 1 ;
+                               sh:path rdf:type ;
+                               sh:pattern "http://schema.org/Organization"
+                           ]
+                       ]
+                   ])
+               ]
+               [
+                   sh:node [
+                       a sh:NodeShape ;
+                       sh:and (
+                       [
+                           sh:or (
+                           [
+                               sh:property [
+                                   sh:minCount 1 ;
+                                   sh:path schema:name
+                               ]
+                           ]
+                           [
+                               sh:property [
+                                   sh:minCount 1 ;
+                                   sh:path schema:url
+                               ]
+                           ])
+                       ]
+                       [
+                           sh:property [
+                               sh:message "VALID_URL" ;
+                               sh:path schema:url
+                           ]
+                       ])
+                   ]
+               ]);
+               sh:path schema:creator
+           ]
+        ]
+        [
+           sh:property [
+               sh:and (
+               [
+                   sh:node [
+                       a sh:NodeShape ;
+                       sh:property [
+                           sh:min_count 1 ;
+                           sh:path rdf:type ;
+                           sh:pattern "http://schema.org/DataCatalog"
+                       ]
+                   ]
+               ]
+               [
+                   sh:node [
+                       a sh:NodeShape ;
+                       sh:and (
+                       [
+                           sh:or (
+                           [
+                               sh:property [
+                                   sh:minCount 1 ;
+                                   sh:path schema:name
+                               ]
+                           ]
+                           [
+                               sh:property [
+                                   sh:minCount 1 ;
+                                   sh:path schema:url
+                               ]
+                           ])
+                       ]
+                       [
+                           sh:property [
+                               sh:message "VALID_URL" ;
+                               sh:path schema:url
+                           ]
+                       ])
+                   ];
+                   sh:not [
+                       sh:node [
+                           a sh:NodeShape ;
+                           sh:property [
+                               sh:min_count 1 ;
+                               sh:path rdf:type ;
+                               sh:pattern "http://schema.org/CreativeWork"
+                           ]
+                       ]
+                   ]
+               ]);
+           sh:path schema:citation ]
+        ]
+        [
+           sh:property [
+               sh:and (
+               [
+                   sh:node [
+                       a sh:NodeShape ;
+                       sh:property [
+                           sh:min_count 1 ;
+                           sh:path rdf:type ;
+                           sh:pattern "http://schema.org/DataDownload"
+                       ]
+                   ]
+               ]
+               [
+                   sh:node [
+                       a sh:NodeShape ;
+                       sh:and (
+                       [
+                           sh:property [
+                               sh:maxCount 1 ;
+                               sh:path schema:encodingFormat ;
+                               sh:severity sh:Warning
+                           ]
+                       ]
+                       [
+                           sh:property [
+                               sh:maxCount 1 ;
+                               sh:path schema:contentUrl ;
+                               sh:severity sh:Warning
+                           ]
+                       ]
+                       [
+                           sh:property [
+                               sh:message "DATE_TIME_WITH_TIME" ;
+                               sh:path schema:datePublished
+                           ]
+                       ])
+                   ]
+               ]) ;
+               sh:path schema:distribution
+           ]
+        ]
+        [
+           sh:property [
+               sh:and (
+               [
+                   sh:node [
+                       a sh:NodeShape ;
+                       sh:property [
+                           sh:min_count 1 ;
+                           sh:path rdf:type ;
+                           sh:pattern "http://schema.org/Place"
+                       ]
+                   ]
+               ]
+               [
+                   sh:node [
+                       a sh:NodeShape ;
+                       sh:property [
+                           sh:or (
+                           [
+                               sh:node [
+                                   a sh:NodeShape ;
+                                   sh:property [
+                                       sh:min_count 1 ;
+                                       sh:path rdf:type ;
+                                       sh:pattern "http://schema.org/GeoShape"
+                                   ]
+                               ]
+                           ]
+                           [
+                               sh:node [
+                                   a sh:NodeShape ;
+                                   sh:property [
+                                       sh:min_count 1 ;
+                                       sh:path rdf:type ;
+                                       sh:pattern "http://schema.org/GeoCoordinates"
+                                   ]
+                               ]
+                           ]) ;
+                           sh:path schema:geo
+                       ]
+                   ]
+               ]) ;
+               sh:path schema:spatialCoverage
+           ]
+        ]
+   ) .
